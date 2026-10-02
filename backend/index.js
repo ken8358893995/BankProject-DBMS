@@ -18,6 +18,10 @@ app.use(
 
 require('./app/routes/customer.routes')(app);
 require('./app/routes/fd.routes')(app);
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', time: new Date() });
+});
 require('./app/routes/account.routes')(app);
 require('./app/routes/physicalloan.routes')(app);
 require('./app/routes/onlineloan.routes')(app);
