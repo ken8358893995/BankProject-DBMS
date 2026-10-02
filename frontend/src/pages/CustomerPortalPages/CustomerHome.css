@@ -1,0 +1,112 @@
+/* Prevent scrollbar jitter/vibration */
+html {
+  overflow-y: scroll;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.customer-portal {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.cp-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 30px;
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.cp-welcome {
+  font-size: 1rem;
+  color: #444;
+}
+
+.cp-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aruci--logo {
+  height: 40px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.aruci--logo:hover {
+  opacity: 0.85;
+  transform: none !important;
+}
+
+/* Main content */
+.cp-content {
+  padding: 24px 32px;
+}
+
+/* Stats Row */
+.cp-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.cp-stat-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+  border: 1px solid #f0f0f0 !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.cp-stat-card:hover {
+  transform: none !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+  border-color: #d6e4ff !important;
+}
+
+/* Quick Actions */
+.cp-actions-grid {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.cp-actions-grid .ant-btn {
+  height: 46px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  padding: 0 20px !important;
+}
+
+/* Footer */
+.cp-footer {
+  text-align: center;
+  padding: 16px;
+  background: #1a1a2e;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cp-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cp-navbar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+}

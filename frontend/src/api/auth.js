@@ -18,6 +18,7 @@ export async function login(credentials) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('tokenExpiration', Date.now() + 900000);
         localStorage.setItem('role', response.data.role);
+        localStorage.setItem('userName', response.data.userName);
         return response.data;
       } else {
         return await Promise.reject(response.data.message);
@@ -28,6 +29,7 @@ export async function login(credentials) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('tokenExpiration', Date.now() + 7200000);
         localStorage.setItem('role', response.data.role);
+        localStorage.setItem('userName', response.data.userName);
         return response.data;
       } else {
         return await Promise.reject(response.data.message);

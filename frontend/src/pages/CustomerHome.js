@@ -198,7 +198,7 @@ export default function CustomerHome(props) {
             className='customerPortal--button'
             color='red'
             onClick={() => {
-              customerLogout().then(() => navigate(`/customerLogin`));
+              customerLogout().then(() => navigate(`/customerLogin`, { replace: true }));
             }}
           >
             Logout

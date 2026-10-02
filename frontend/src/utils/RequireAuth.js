@@ -23,6 +23,6 @@ export default function RequireAuth({ children, redirectTo, authRole }) {
   return isAuthenticated ? (
     <Routes>{children}</Routes>
   ) : (
-    <Navigate to={redirectTo} />
+    <Navigate to={redirectTo} replace={true} />
   );
 }

@@ -84,13 +84,32 @@ export default function TransactionReport() {
   //console.log(loans);
   return (
     <div>
-      <div className='navbar'>
-        <img
-          className='aruci--logo'
-          src={Logo}
-          onClick={() => navigate('/employeePortal/')}
-        />
-        <h1 className='topic'>Transaction Report</h1>
+      <div className='navbar' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <img
+            className='aruci--logo'
+            src={Logo}
+            onClick={() => navigate('/employeePortal/')}
+            style={{ cursor: 'pointer' }}
+          />
+          <h1 className='topic' style={{ display: 'inline-block', marginLeft: 20 }}>Transaction Report</h1>
+        </div>
+        <button 
+          onClick={() => window.print()}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#1677ff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            marginRight: '20px'
+          }}
+        >
+          🖨️ Print / Save as PDF
+        </button>
       </div>
       <div className='table'>
         {/* {console.log(inTransaction)} */}

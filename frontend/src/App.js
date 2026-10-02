@@ -11,12 +11,15 @@ import AccountReg from './Forms/AccountReg';
 import AccountList from './Forms/AccountsList';
 import EmployeeReg from './Forms/EmployeeReg';
 import EmployeeList from './Forms/EmpoyeeList';
+import BranchList from './Forms/BranchList';
+import BranchReg from './Forms/BranchReg';
 
 import FixedDepositReg from './Forms/FixedDepositReg';
 import LoanReg from './Forms/LoanReg';
 import LoanList from './Forms/LoanList';
 import CustomerLogin from './pages/LoginPages/CustomerLogin';
 import EmployeeLogin from './pages/LoginPages/EmployeeLogin';
+import SignupPage from './pages/SignupPage';
 import RequireAuth from './utils/RequireAuth';
 import WithdrawalList from './Forms/WithdrawalList';
 import WithdrawalCreate from './Forms/WithdrawalCreate';
@@ -27,7 +30,7 @@ import TransactionCreate from './Forms/TransactionCreate';
 import TransactionList from './Forms/TransactionList';
 
 // import for customer portal
-import CustomerHome from './pages/CustomerHome';
+import CustomerHome from './pages/CustomerPortalPages/CustomerHome';
 import AccountView from './pages/CustomerPortalPages/AccountView';
 import FixedDepositView from './pages/CustomerPortalPages/FixedDepositView';
 import OnlineLoanView from './pages/CustomerPortalPages/OnlineLoanView';
@@ -72,6 +75,8 @@ function App() {
 
                 <Route path='employee-register' element={<EmployeeReg />} />
                 <Route path='employee-list' element={<EmployeeList />} />
+                <Route path='branch-register' element={<BranchReg />} />
+                <Route path='branch-list' element={<BranchList />} />
 
                 <Route path='account-register' element={<AccountReg />} />
                 <Route path='account-list' element={<AccountList />} />
@@ -185,6 +190,7 @@ function App() {
             />
           </Route>
           {/* Home page */}
+          <Route path='/signup' element={<SignupPage />} />
           <Route path='/' element={<HomePage />} />
         </Routes>
       </BrowserRouter>

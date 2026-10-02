@@ -102,3 +102,12 @@ export async function getBranchOutCount() {
     return await Promise.reject('Failed to get branch out count!');
   }
 }
+
+export async function sendOtpEmail(email, otp, amount) {
+  try {
+    const response = await axios.post(`${HOST}/send-otp`, { email, otp, amount });
+    return response.data;
+  } catch (error) {
+    return await Promise.reject('Failed to send OTP email!');
+  }
+}

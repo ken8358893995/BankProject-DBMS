@@ -42,7 +42,8 @@ export default function AccountList() {
     },
   ];
 
-  const [accounts, setAccounts] = React.useState();
+  const [accounts, setAccounts] = React.useState([]);
+  const [searchText, setSearchText] = React.useState('');
 
   // account list is loaded on the first component render
   React.useEffect(() => loadAccountList(), []);
@@ -56,8 +57,11 @@ export default function AccountList() {
   }
   const navigate = useNavigate();
 
-  //loadAccountList();
-  //console.log(Account);
+  const filteredAccounts = accounts.filter(a => 
+    String(a.AccountID).includes(searchText) || 
+    String(a.CustomerID).includes(searchText)
+  );
+
   return (
     <div>
       <div className='navbar'>
@@ -68,11 +72,26 @@ export default function AccountList() {
         <h1 className='topic'>Account List</h1>
       </div>
 
-      <div className='table'>
-        {<Table 
-            dataSource={accounts} 
-            columns={columns}
-             />}
+      <div style={{ padding: '20px 40px' }}>
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+          <h2>Bank Accounts</h2>
+          <input 
+            type="text" 
+            placeholder="🔍 Search by Account or Customer ID..." 
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ 
+              padding: '8px 16px', 
+              width: '320px', 
+              borderRadius: '20px', 
+              border: '1px solid #ccc',
+              outline: 'none'
+            }}
+          />
+        </div>
+        <div className='table'>
+          <Table dataSource={filteredAccounts} columns={columns} rowKey="AccountID" />
+        </div>
       </div>
     </div>
   );

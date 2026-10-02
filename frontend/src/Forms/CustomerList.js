@@ -34,7 +34,8 @@ export default function CustomerList() {
     },
   ];
 
-  const [customers, setCustomers] = React.useState();
+  const [customers, setCustomers] = React.useState([]);
+  const [searchText, setSearchText] = React.useState('');
 
   // customer list is loaded on the first component render
   React.useEffect(() => loadCustomerList(), []);
@@ -49,8 +50,11 @@ export default function CustomerList() {
 
   const navigate = useNavigate();
 
-  //loadCustomerList();
-  //console.log(Customer);
+  const filteredCustomers = customers.filter(c => 
+    String(c.CustomerID).includes(searchText) || 
+    c.Name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <div>
       <div className='navbar'>
@@ -60,8 +64,28 @@ export default function CustomerList() {
         onClick={() => navigate('/employeePortal/')} />
         <h1 className='topic'>Customer List</h1>
       </div>
-
-      <div className='table'>{<Table dataSource={customers} columns={columns} />}</div>
+      
+      <div style={{ padding: '20px 40px' }}>
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+          <h2>Registered Customers</h2>
+          <input 
+            type="text" 
+            placeholder="🔍 Search by ID or Name..." 
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ 
+              padding: '8px 16px', 
+              width: '300px', 
+              borderRadius: '20px', 
+              border: '1px solid #ccc',
+              outline: 'none'
+            }}
+          />
+        </div>
+        <div className='table'>
+          <Table dataSource={filteredCustomers} columns={columns} rowKey="CustomerID" />
+        </div>
+      </div>
     </div>
   );
 }
