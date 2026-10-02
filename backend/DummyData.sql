@@ -1,3 +1,5 @@
+SET sql_mode = '';
+SET FOREIGN_KEY_CHECKS = 0;
 -- delete data in all tables
 DELETE FROM Transaction;
 DELETE FROM Withdrawal;
