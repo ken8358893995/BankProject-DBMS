@@ -4,7 +4,8 @@ import './PageStyling/HomePage.css';
 import Logo from './Images/Logo2.png';
 import BankPhoto from './Images/BankPhoto.jpg';
 import { Button, Card, Modal, Tag, Steps } from 'antd';
-import { UserAddOutlined, CheckCircleOutlined, SafetyCertificateOutlined, ThunderboltOutlined, IdcardOutlined } from '@ant-design/icons';
+import { UserAddOutlined, CheckCircleOutlined, SafetyCertificateOutlined, ThunderboltOutlined, IdcardOutlined, RobotOutlined } from '@ant-design/icons';
+import BankingChatbot from '../components/BankingChatbot';
 
 const { Step } = Steps;
 
@@ -247,6 +248,9 @@ export default function EmployeeHome() {
           <p>ARUCI Bank ©2024. All rights reserved.</p>
         </div>
       </div>
+
+      {/* Floating Gemini AI Banking Advisor */}
+      <BankingChatbot username="Guest User" accounts={[]} fds={[]} />
     </div>
   );
 }

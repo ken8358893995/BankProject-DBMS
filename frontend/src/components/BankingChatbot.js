@@ -119,29 +119,33 @@ export default function BankingChatbot({ username = 'Customer', accounts = [], f
   return (
     <>
       {/* Floating Toggle Button */}
-      <Tooltip title={isOpen ? 'Close Chat' : 'ARUCI Smart Banking Assistant'} placement="left">
+      <Tooltip title={isOpen ? 'Close Chat' : 'Ask ARUCI Gemini AI Advisor'} placement="left">
         <Button
           type="primary"
-          shape="circle"
+          shape="round"
           size="large"
           style={{
             position: 'fixed',
-            bottom: '32px',
-            left: '32px',
-            width: '60px',
-            height: '60px',
-            boxShadow: '0 6px 20px rgba(22,119,255,0.45)',
+            bottom: '28px',
+            right: '28px',
+            height: '52px',
+            padding: '0 20px',
+            boxShadow: '0 8px 24px rgba(22,119,255,0.45)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            fontSize: '26px',
-            zIndex: 1000,
+            gap: '8px',
+            fontSize: '15px',
+            fontWeight: 700,
+            zIndex: 9999,
             background: 'linear-gradient(135deg, #1677ff 0%, #722ed1 100%)',
             border: 'none',
+            color: '#fff'
           }}
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <CloseOutlined style={{ fontSize: 22 }} /> : <CustomerServiceOutlined style={{ fontSize: 24 }} />}
+          {isOpen ? <CloseOutlined style={{ fontSize: 18 }} /> : <RobotOutlined style={{ fontSize: 20 }} />}
+          <span>{isOpen ? 'Close' : '🤖 Ask Gemini AI'}</span>
         </Button>
       </Tooltip>
 
@@ -150,13 +154,13 @@ export default function BankingChatbot({ username = 'Customer', accounts = [], f
         <Card
           style={{
             position: 'fixed',
-            bottom: '102px',
-            left: '32px',
-            width: '360px',
-            height: '480px',
+            bottom: '92px',
+            right: '28px',
+            width: '380px',
+            height: '500px',
             borderRadius: 16,
             boxShadow: '0 12px 36px rgba(0,0,0,0.22)',
-            zIndex: 1001,
+            zIndex: 10000,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
