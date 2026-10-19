@@ -88,13 +88,14 @@ app.post('/send-otp', async (req, res) => {
         return res.json({ success: true, message: 'OTP sent to your email address', otp });
       } catch (mailErr) {
         console.error('Mail send error:', mailErr.message);
+        return res.json({ success: false, error: mailErr.message, message: 'SMTP error: ' + mailErr.message, otp });
       }
     }
 
-    res.json({ success: true, message: 'OTP simulated', previewUrl: 'simulated', otp });
+    res.json({ success: true, message: 'OTP simulated - credentials missing', previewUrl: 'simulated', otp });
   } catch (err) {
     console.error('Send OTP error:', err);
-    res.json({ success: true, message: 'OTP simulated', previewUrl: 'simulated', otp });
+    res.json({ success: false, error: err.message, message: 'OTP failed', otp });
   }
 });
 const db = require('./app/models/db.js');
