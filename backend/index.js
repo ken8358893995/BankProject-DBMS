@@ -70,7 +70,7 @@ app.post('/send-otp', async (req, res) => {
 
     try {
       let info = await transporter.sendMail({
-        from: `"ARUCI Bank" <noreply@arucibank.com>`,
+        from: `"ARUCI Bank" <nikilken170@gmail.com>`,
         to: email,
         subject: "Your OTP for Fund Transfer",
         html: `
