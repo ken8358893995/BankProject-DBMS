@@ -52,52 +52,47 @@ app.post('/send-otp', async (req, res) => {
   const { email, otp, amount } = req.body;
   
   try {
-    let transporter;
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      transporter = nodemailer.createTransport({
-        host: 'smtp-relay.brevo.com',
-        port: 587,
-        secure: false,
-        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
-      });
-    } else {
-      transporter = etherealTransporter;
-    }
-
-    if (!transporter) {
-       return res.json({ success: true, message: "OTP generated", previewUrl: "simulated", otp });
-    }
-
-    try {
-      let info = await transporter.sendMail({
-        from: `"ARUCI Bank" <nikilken170@gmail.com>`,
-        to: email,
-        subject: "Your OTP for Fund Transfer",
-        html: `
-          <div style="font-family: Arial; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 500px;">
-            <h2 style="color: #1677ff;">ARUCI Bank Secure Transfer</h2>
-            <p>You have requested to transfer <b>Rs. ${amount}</b>.</p>
-            <p>Your One Time Password (OTP) is:</p>
-            <h1 style="letter-spacing: 5px; color: #cf1322; background: #fff1f0; padding: 10px; text-align: center; border-radius: 5px;">${otp}</h1>
-            <p>Do not share this OTP with anyone. It is valid for 10 minutes.</p>
-          </div>
-        `
+    const apiKey = process.env.EMAIL_PASS;
+    if (apiKey) {
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'api-key': apiKey,
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: 'ARUCI Bank', email: 'nikilken170@gmail.com' },
+          to: [{ email: email }],
+          subject: 'Your OTP for Fund Transfer - ARUCI Bank',
+          htmlContent: `
+            <div style="font-family: Arial, sans-serif; padding: 25px; border: 1px solid #e0e0e0; border-radius: 12px; max-width: 500px; margin: auto;">
+              <h2 style="color: #1677ff; margin-top: 0;">ARUCI Bank Secure Transfer</h2>
+              <p style="font-size: 15px; color: #333;">You have requested to transfer <b>Rs. ${amount}</b>.</p>
+              <p style="color: #555;">Your One Time Password (OTP) is:</p>
+              <div style="letter-spacing: 6px; color: #cf1322; background: #fff1f0; padding: 14px; text-align: center; border-radius: 8px; font-size: 32px; font-weight: bold; border: 1px dashed #ffa39e;">
+                ${otp}
+              </div>
+              <p style="color: #888; font-size: 13px; margin-top: 20px;">Do not share this OTP with anyone. It is valid for 10 minutes.</p>
+            </div>
+          `
+        })
       });
 
-      let previewUrl = nodemailer.getTestMessageUrl(info);
-      if (previewUrl) {
-        console.log("Preview URL: %s", previewUrl);
-        res.json({ success: true, message: "OTP sent successfully", previewUrl, otp });
+      const data = await response.json();
+      console.log('Brevo API Result:', data);
+
+      if (response.ok && data.messageId) {
+        return res.json({ success: true, message: 'OTP sent successfully to email', otp });
       } else {
-        res.json({ success: true, message: "OTP sent successfully", otp });
+        console.error('Brevo API Error:', data);
       }
-    } catch (mailErr) {
-      console.log("Mail delivery error (simulating OTP):", mailErr.message);
-      res.json({ success: true, message: "OTP sent successfully", previewUrl: "simulated", otp });
     }
+
+    res.json({ success: true, message: 'OTP simulated', previewUrl: 'simulated', otp });
   } catch (err) {
-    console.error(err);
-    res.json({ success: true, message: "OTP simulated", previewUrl: "simulated", otp });
+    console.error('Send OTP error:', err);
+    res.json({ success: true, message: 'OTP simulated', previewUrl: 'simulated', otp });
   }
 });
 const db = require('./app/models/db.js');
