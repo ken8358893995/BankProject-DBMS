@@ -52,20 +52,26 @@ app.post('/send-otp', async (req, res) => {
   const { email, otp, amount } = req.body;
   
   try {
-    const apiKey = process.env.EMAIL_PASS;
-    if (apiKey) {
-      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: {
-          'accept': 'application/json',
-          'api-key': apiKey,
-          'content-type': 'application/json'
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp-relay.brevo.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
         },
-        body: JSON.stringify({
-          sender: { name: 'ARUCI Bank', email: 'nikilken170@gmail.com' },
-          to: [{ email: email }],
+        connectionTimeout: 15000,
+        greetingTimeout: 10000,
+        socketTimeout: 20000
+      });
+
+      try {
+        const info = await transporter.sendMail({
+          from: `"ARUCI Bank" <nikilken170@gmail.com>`,
+          to: email,
           subject: 'Your OTP for Fund Transfer - ARUCI Bank',
-          htmlContent: `
+          html: `
             <div style="font-family: Arial, sans-serif; padding: 25px; border: 1px solid #e0e0e0; border-radius: 12px; max-width: 500px; margin: auto;">
               <h2 style="color: #1677ff; margin-top: 0;">ARUCI Bank Secure Transfer</h2>
               <p style="font-size: 15px; color: #333;">You have requested to transfer <b>Rs. ${amount}</b>.</p>
@@ -76,16 +82,12 @@ app.post('/send-otp', async (req, res) => {
               <p style="color: #888; font-size: 13px; margin-top: 20px;">Do not share this OTP with anyone. It is valid for 10 minutes.</p>
             </div>
           `
-        })
-      });
+        });
 
-      const data = await response.json();
-      console.log('Brevo API Result:', data);
-
-      if (response.ok && data.messageId) {
-        return res.json({ success: true, message: 'OTP sent successfully to email', otp });
-      } else {
-        console.error('Brevo API Error:', data);
+        console.log('Real Email Sent! ID:', info.messageId);
+        return res.json({ success: true, message: 'OTP sent to your email address', otp });
+      } catch (mailErr) {
+        console.error('Mail send error:', mailErr.message);
       }
     }
 
