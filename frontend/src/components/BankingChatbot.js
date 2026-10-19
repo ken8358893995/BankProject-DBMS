@@ -67,7 +67,7 @@ export default function BankingChatbot({ username = 'Customer', accounts = [], f
     return "I can help with: 'Check Balance', 'FD Rates', 'Apply Loan', 'Card Security', or 'How to Transfer'. What would you like to know?";
   };
 
-  const handleSend = (textToSend) => {
+  const handleSend = async (textToSend) => {
     const text = textToSend || inputMsg;
     if (!text.trim()) return;
 
@@ -81,16 +81,37 @@ export default function BankingChatbot({ username = 'Customer', accounts = [], f
     setMessages((prev) => [...prev, userMessage]);
     setInputMsg('');
 
-    setTimeout(() => {
-      const reply = getBotResponse(text);
-      const botMessage = {
-        id: Date.now() + 1,
-        sender: 'bot',
-        text: reply,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
-      setMessages((prev) => [...prev, botMessage]);
-    }, 500);
+    // Typing indicator
+    const typingId = Date.now() + 1;
+    setMessages((prev) => [
+      ...prev,
+      { id: typingId, sender: 'bot', text: 'Thinking with Gemini AI...', time: 'Just now' }
+    ]);
+
+    try {
+      const host = process.env.REACT_APP_API_URL || "https://aruci-bank.onrender.com";
+      const totalBal = accounts.reduce((sum, a) => sum + (a.Balance || 0), 0);
+      const res = await fetch(`${host}/ai/advisor`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: text,
+          customerContext: {
+            username,
+            totalBalance: totalBal,
+            activeAccountsCount: accounts.length,
+            activeFDCount: fds.length,
+          }
+        })
+      });
+      const data = await res.json();
+      const botReply = data.reply || getBotResponse(text);
+
+      setMessages((prev) => prev.map((m) => (m.id === typingId ? { ...m, text: botReply, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) } : m)));
+    } catch (e) {
+      const localReply = getBotResponse(text);
+      setMessages((prev) => prev.map((m) => (m.id === typingId ? { ...m, text: localReply, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) } : m)));
+    }
   };
 
   const quickQuestions = ['Check Balance', 'FD Offers', 'Apply Loan', 'Debit Card Help'];
