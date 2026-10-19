@@ -39,39 +39,12 @@ export default function EmployeeLogin() {
           setGeneratedOtp(otp);
           
           try {
-            const result = await sendOtpEmail(values.email, otp, "Staff Portal Login");
-            Modal.info({
-              title: '🔒 Staff 2FA Verification Code',
-              content: (
-                <div style={{ marginTop: '10px' }}>
-                  <p style={{ marginBottom: 10 }}>One-Time Password for <b>{values.email}</b>:</p>
-                  <div style={{ background: '#f5f5f5', padding: '10px', textAlign: 'center', fontSize: '28px', letterSpacing: '8px', fontWeight: 'bold', color: '#1677ff', borderRadius: '8px', border: '2px dashed #1677ff' }}>
-                    {result?.otp || otp}
-                  </div>
-                  <p style={{ color: '#888', marginTop: 10, fontSize: '0.85rem' }}>Click OK to continue to verification.</p>
-                </div>
-              ),
-              onOk: () => {
-                setUserOtp(otp);
-                setIsOtpVisible(true);
-              }
-            });
+            await sendOtpEmail(values.email, otp, "Staff Portal Login");
+            message.success({ content: `Security code sent to ${values.email}. Please check your inbox!`, key: 'login_msg', duration: 4 });
+            setUserOtp('');
+            setIsOtpVisible(true);
           } catch (e) {
-            Modal.info({
-              title: '🔒 Staff 2FA Verification Code',
-              content: (
-                <div style={{ marginTop: '10px' }}>
-                  <p style={{ marginBottom: 10 }}>Your 6-digit One-Time Password is:</p>
-                  <div style={{ background: '#f5f5f5', padding: '10px', textAlign: 'center', fontSize: '28px', letterSpacing: '8px', fontWeight: 'bold', color: '#1677ff', borderRadius: '8px', border: '2px dashed #1677ff' }}>
-                    {otp}
-                  </div>
-                </div>
-              ),
-              onOk: () => {
-                setUserOtp(otp);
-                setIsOtpVisible(true);
-              }
-            });
+            message.error({ content: "Failed to send email. Please check network/email address.", key: 'login_msg', duration: 4 });
           }
         }
         setSubmitting(false);
@@ -144,23 +117,8 @@ export default function EmployeeLogin() {
           </div>
           
           <div style={{ padding: '28px 32px' }}>
-            {/* Quick Demo Credentials Box */}
-            <div style={{
-              background: '#f0f5ff',
-              border: '1px solid #adc6ff',
-              borderRadius: 10,
-              padding: '12px 16px',
-              marginBottom: 20,
-              fontSize: '0.88rem'
-            }}>
-              <div style={{ fontWeight: 700, color: '#1677ff', marginBottom: 4 }}>💡 Demo Employee Accounts:</div>
-              <div>Staff: Username: <b>cabral</b> | Password: <b>123456</b></div>
-              <div>Manager: Username: <b>ranil</b> | Password: <b>123456</b></div>
-              <div>Email: <b>staff@bank.com</b></div>
-            </div>
-
             <Formik
-              initialValues={{ username: 'cabral', password: 'password', email: 'staff@bank.com' }}
+              initialValues={{ username: '', password: '', email: '' }}
               validationSchema={customerRegSchema}
               onSubmit={handleSubmit}
             >

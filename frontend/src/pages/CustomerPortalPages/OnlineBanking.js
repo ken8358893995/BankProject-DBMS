@@ -77,29 +77,12 @@ export default function OnlineBanking() {
     
     message.loading({ content: 'Sending OTP to your email...', key: 'otp_msg' });
     try {
-      const result = await sendOtpEmail(values.email, otp, values.amount);
-      if (result.previewUrl) {
-        Modal.info({
-          title: '📧 Simulated Email Received',
-          content: (
-            <div style={{ marginTop: '10px' }}>
-              <p style={{ marginBottom: 10 }}>Since the real Email Server is not configured, we intercepted the email sent to <b>{values.email}</b>.</p>
-              <p style={{ color: '#888', marginBottom: 5 }}>Your One-Time Password is:</p>
-              <div style={{ background: '#f5f5f5', padding: '10px', textAlign: 'center', fontSize: '28px', letterSpacing: '8px', fontWeight: 'bold', color: '#1677ff', borderRadius: '8px', border: '2px dashed #1677ff' }}>
-                {result.otp}
-              </div>
-            </div>
-          ),
-          onOk: () => {
-            setIsOtpVisible(true);
-          }
-        });
-      } else {
-        message.success({ content: `OTP has been sent to ${values.email}!`, key: 'otp_msg', duration: 4 });
-        setIsOtpVisible(true);
-      }
+      await sendOtpEmail(values.email, otp, values.amount);
+      message.success({ content: `Security code (OTP) sent to ${values.email}! Please check your email inbox.`, key: 'otp_msg', duration: 5 });
+      setUserOtp('');
+      setIsOtpVisible(true);
     } catch (e) {
-      message.error({ content: 'Failed to send OTP. Please check your email configuration.', key: 'otp_msg', duration: 4 });
+      message.error({ content: 'Failed to send OTP. Please check your email address.', key: 'otp_msg', duration: 4 });
     }
     
     setSubmitting(false);

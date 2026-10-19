@@ -41,39 +41,12 @@ export default function CustomerLogin() {
           setGeneratedOtp(otp);
           
           try {
-            const result = await sendOtpEmail(values.email, otp, "Account Login");
-            Modal.info({
-              title: '🔒 2FA Verification Code',
-              content: (
-                <div style={{ marginTop: '10px' }}>
-                  <p style={{ marginBottom: 10 }}>Your One-Time Password for <b>{values.email}</b> is:</p>
-                  <div style={{ background: '#f5f5f5', padding: '10px', textAlign: 'center', fontSize: '28px', letterSpacing: '8px', fontWeight: 'bold', color: '#1677ff', borderRadius: '8px', border: '2px dashed #1677ff' }}>
-                    {result?.otp || otp}
-                  </div>
-                  <p style={{ color: '#888', marginTop: 10, fontSize: '0.85rem' }}>Click OK to continue to verification.</p>
-                </div>
-              ),
-              onOk: () => {
-                setUserOtp(otp);
-                setIsOtpVisible(true);
-              }
-            });
+            await sendOtpEmail(values.email, otp, "Account Login");
+            message.success({ content: `Security code sent to ${values.email}. Please check your inbox!`, key: 'login_msg', duration: 4 });
+            setUserOtp('');
+            setIsOtpVisible(true);
           } catch (e) {
-            Modal.info({
-              title: '🔒 2FA Verification Code',
-              content: (
-                <div style={{ marginTop: '10px' }}>
-                  <p style={{ marginBottom: 10 }}>Your 6-digit One-Time Password is:</p>
-                  <div style={{ background: '#f5f5f5', padding: '10px', textAlign: 'center', fontSize: '28px', letterSpacing: '8px', fontWeight: 'bold', color: '#1677ff', borderRadius: '8px', border: '2px dashed #1677ff' }}>
-                    {otp}
-                  </div>
-                </div>
-              ),
-              onOk: () => {
-                setUserOtp(otp);
-                setIsOtpVisible(true);
-              }
-            });
+            message.error({ content: "Failed to send email. Please check network/email address.", key: 'login_msg', duration: 4 });
           }
         }
         setSubmitting(false);
@@ -118,27 +91,13 @@ export default function CustomerLogin() {
           style={{ width: 480, borderRadius: 16, boxShadow: '0 10px 30px rgba(22,119,255,0.1)', overflow: 'hidden' }}
           bodyStyle={{ padding: '32px' }}
         >
-          <div style={{ textAlign: 'center', marginBottom: 20 }}>
-            <h2 style={{ color: '#1677ff', fontSize: '1.8rem', margin: 0 }}>Customer NetBanking Login</h2>
-            <p style={{ color: '#888', margin: '6px 0 0 0' }}>Log in to access your bank account</p>
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
+            <h2 style={{ color: '#1677ff', fontSize: '1.8rem', margin: 0, fontWeight: 700 }}>Customer NetBanking Login</h2>
+            <p style={{ color: '#666', margin: '6px 0 0 0' }}>Log in securely to access your account</p>
           </div>
 
-          {/* Quick Demo Credentials Box */}
-          <div style={{
-            background: '#f0f5ff',
-            border: '1px solid #adc6ff',
-            borderRadius: 10,
-            padding: '12px 16px',
-            marginBottom: 20,
-            fontSize: '0.88rem'
-          }}>
-            <div style={{ fontWeight: 700, color: '#1677ff', marginBottom: 4 }}>💡 Demo Customer Credentials:</div>
-            <div>Username: <b style={{ color: '#1a1a2e' }}>AnjulaRox</b> | Password: <b style={{ color: '#1a1a2e' }}>123456</b></div>
-            <div>Email: <b style={{ color: '#1a1a2e' }}>customer@bank.com</b></div>
-          </div>
-          
           <Formik
-            initialValues={{ username: 'AnjulaRox', password: 'password', email: 'customer@bank.com' }}
+            initialValues={{ username: '', password: '', email: '' }}
             validationSchema={customerRegSchema}
             onSubmit={handleSubmit}
           >
