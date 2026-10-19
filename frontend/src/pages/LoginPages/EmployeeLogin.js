@@ -239,8 +239,17 @@ export default function EmployeeLogin() {
           <input
             type="text"
             maxLength={6}
+            autoFocus
             value={userOtp}
-            onChange={(e) => setUserOtp(e.target.value.replace(/\D/g, ''))}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, '');
+              setUserOtp(val);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleOtpVerify();
+              }
+            }}
             placeholder="• • • • • •"
             style={{
               fontSize: '2rem',
