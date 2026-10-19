@@ -55,7 +55,9 @@ app.post('/send-otp', async (req, res) => {
     let transporter;
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp-relay.brevo.com',
+        port: 587,
+        secure: false,
         auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
       });
     } else {
