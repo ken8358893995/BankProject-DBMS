@@ -59,7 +59,7 @@ export default function CustomerLogin() {
   };
 
   const handleOtpVerify = () => {
-    if (userOtp !== generatedOtp) {
+    if (String(userOtp).trim() !== String(generatedOtp).trim()) {
       message.error("Invalid OTP! Please try again.");
       return;
     }
